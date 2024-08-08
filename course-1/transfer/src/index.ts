@@ -8,9 +8,8 @@ import {
     LAMPORTS_PER_SOL
   } from "@solana/web3.js";
 import dotEnv from 'dotenv'
+import bs58 from 'bs58'
 dotEnv.config()
-// @ts-ignore
-import { getKeypairFromEnvironment } from "@solana-developers/helpers";
 
 
 async function transact(connection: Connection, trans: Transaction, senderKP: any) {
@@ -25,7 +24,8 @@ async function checkBalance(account: PublicKey, amt: number) {
     const connection  = new Connection("https://api.devnet.solana.com", "confirmed");
     
     const balance = await connection.getBalance(account);
-    
+    console.log(`balance : ${balance/LAMPORTS_PER_SOL}`)
+    console.log(`amt : ${amt}`)
     if(balance/LAMPORTS_PER_SOL < amt)
     {
         console.error("insufficient balance");
@@ -35,23 +35,25 @@ async function checkBalance(account: PublicKey, amt: number) {
 
 async function exec(transferAmount: string, transerPK: any) {
 
-    const fromKp = getKeypairFromEnvironment("SECRET_KEY")
+    const secretKeyString = process.env.SECRET_KEY!;
+    const secretKey = bs58.decode(secretKeyString);
+    const senderKeypair = Keypair.fromSecretKey(secretKey);
 
-    checkBalance(fromKp.publicKey, Number(transferAccunt));
+    checkBalance(senderKeypair.publicKey, parseFloat(transferAmount));
     
     const connection = new Connection("https://api.devnet.solana.com", "confirmed");
     
     const transaction  = new Transaction();
     
     const instructions = SystemProgram.transfer({
-        fromPubkey: fromKp.publicKey,
+        fromPubkey: senderKeypair.publicKey,
         toPubkey: transerPK,
         lamports: LAMPORTS_PER_SOL * Number(transferAmount)
     })
     
     transaction.add(instructions);
     
-    transact(connection, transaction, fromKp);
+    transact(connection, transaction, senderKeypair);
 }
 
 const transferAccunt = process.argv[2] || null

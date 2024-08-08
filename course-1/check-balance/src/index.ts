@@ -9,11 +9,11 @@ async function getBalance(account: string) {
         console.error(e.message)
         return;
     }
-    const connection  = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+    const connection  = new Connection("https://api.devnet.solana.com", "confirmed");
     
     const balance = await connection.getBalance(pbKey);
     
     console.log(`Account balance for ${pbKey} : ${balance/LAMPORTS_PER_SOL}`);
 }
 
-getBalance("gacMrsrxNisAhCfgsUAVbwmTC3w9nJB6NychLAnTQFv")
+getBalance("3A9FPMDLMdkALzqd2ek4dg2op8PptG1V7BgiqEUYua3x")
