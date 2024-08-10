@@ -16,4 +16,4 @@ async function getBalance(account: string) {
     console.log(`Account balance for ${pbKey} : ${balance/LAMPORTS_PER_SOL}`);
 }
 
-getBalance("3A9FPMDLMdkALzqd2ek4dg2op8PptG1V7BgiqEUYua3x")
+getBalance("6yaXPoXvGiDTine41f2y2hr1QVA8qdaQ5pirPX6aT8ma")
